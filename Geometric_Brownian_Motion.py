@@ -1,3 +1,6 @@
+#Author: Ohm Jariwala
+#Date: 12/21/2023
+
 from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
