@@ -1,5 +1,5 @@
 #Author: Ohm Jariwala
-#Date: 12/21/2023
+#Date: 12/24/23
 
 from math import sqrt
 import numpy as np
@@ -15,7 +15,7 @@ class Geometric_Brownian_Motion:
     stock_ticker= input("Stock Ticker?")
     market_index_ticker = '^GSPC'  # S&P 500 index ticker
     
-    # Download data for the stock and market
+    #Download data for the stock and market
     stock_data = yf.download(stock_ticker, start_date, end_date)['Adj Close']
     market_data = yf.download(market_index_ticker, start_date, end_date)['Adj Close']
     
@@ -23,7 +23,7 @@ class Geometric_Brownian_Motion:
     stock_returns = stock_data.pct_change().dropna()
     market_returns = market_data.pct_change().dropna()
 
-    # Organize Returns data into pandas dataframe
+    #Organize Returns data into pandas dataframe
     data = pd.DataFrame({'Stock_Returns': stock_returns, 'Market_Returns': market_returns})
     data = data.dropna()
 
@@ -47,10 +47,13 @@ class Geometric_Brownian_Motion:
     covariance = returns['Stock'].cov(returns['Market'])
 
 
-    #| GBM
+    #| Implementation of Geometric Brownian Motion
+    
+    #use log returns for mu calculation
+    stock_log_returns = np.log(stock_data / stock_data.shift(1)).dropna()
       
     # drift coefficient -> mu
-    mu = (stock_data.pct_change().dropna().mean().round(5))
+    mu = (stock_log_returns.mean().round(5))
     # number of steps -> n
     n = 1000
     # time in years -> t
@@ -59,54 +62,51 @@ class Geometric_Brownian_Motion:
     simulations = 1000
     # initial stock price -> So
     So = stock_data.iloc[len(stock_data)-1].round(4)
-    # Volatility -> Sigma
+    #Volatility -> Sigma
     sigma = round(sqrt(covariance/ beta) *sqrt(21) , 5)
     
-
-    # Calculate each time step
+    #Calculate each time step
     dt = t/n
 
-    # Simulation using numpy arrays
+    #Simulation using numpy arrays
     St = np.exp( (mu - sigma ** 2 / 2) * dt + sigma * np.random.normal(0, np.sqrt(dt), size=(simulations,n)).T)
 
-    # Include array of 1's
+    #Include array of 1's
     St = np.vstack([np.ones(simulations), St])
 
-    # Multiply through by initial stock price and return the cumulative product of elements along a given simulation path. 
+    #Multiply through by initial stock price and return the cumulative product of elements along a given simulation path (axis=0). 
     St = So * St.cumprod(axis=0)
 
-    # Time interval
+    #time interval
     time = np.linspace(0,t,n+1)
 
     # Require numpy array that is the same shape as St
     tt = np.full(shape=(simulations,n+1), fill_value=time).T
 
-    
     # Generate a standard normal random variable
     Z = np.random.normal(0, 1, simulations)
 
-    # Find the end values of each simulation and add to an array
+
+    #find end values of each simulation and add to an array
     expected_stock_price_array=[]
     for i in range(simulations):
         final_value = St[:, i][-1]  # Extract the final value for the i-th simulation
         expected_stock_price_array.append(final_value) 
     
-    # Calculate expected stock price by taking the mean of the ending prices of all simulations
+    #Calculate expected stock price by taking the mean of the ending prices of all simulations
+    
+    
+    #expected_stock_price = So * np.exp((mu * t) + (sigma * Z * np.sqrt(t)))
     expected_stock_price= np.mean(expected_stock_price_array)
-    
-    # Find the maximum value of the stock at the end of the simulation
-    max_stock_value = np.max(St[-1])
-    
-    # Find the minimum value of the stock at the end of the simulation
+    max_stock_value = np.max(St[-1])  # Maximum value of the stock over the entire simulation
     min_stock_value= np.min(St[-1])
 
 
-    # Print Statements
+    # Plot
     print(f"Expected stock price at time t={t*12} months: {expected_stock_price:.2f}")
     print(f"Maximum stock value at time t={t*12} months: {max_stock_value:.2f}")
     print(f"Minimum stock value at time t={t*12} months: {min_stock_value:.2f}")
 
-    # Plot
     plt.plot(tt, St)
     plt.xlabel("Years $(t)$")
     plt.ylabel("Stock Price $(S_t)$")
