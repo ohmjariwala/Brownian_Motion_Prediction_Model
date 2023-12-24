@@ -49,8 +49,8 @@ class Geometric_Brownian_Motion:
 
     #| Implementation of Geometric Brownian Motion
     
-    #use log returns for mu calculation
-    stock_log_returns = np.log(stock_data / stock_data.shift(1)).dropna()
+    #use daily log returns for mu calculation
+    stock_log_returns = np.log1p(stock_data / stock_data.shift(1)).dropna()
       
     # drift coefficient -> mu
     mu = (stock_log_returns.mean().round(5))
