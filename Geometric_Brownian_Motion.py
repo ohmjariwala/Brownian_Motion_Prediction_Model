@@ -9,7 +9,7 @@ import yfinance as yf
 from sklearn.linear_model import LinearRegression
 import pandas as pd
 
-class Geometric_Brownian_Motion_Class:
+class Geometric_Brownian_Motion:
     
     def GBM(stock_ticker, t):
         import datetime as dt
@@ -116,5 +116,3 @@ class Geometric_Brownian_Motion_Class:
         plt.show()
         
         return expected_stock_price
-    
-    print(GBM('AAPL',1/12))
