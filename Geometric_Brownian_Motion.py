@@ -11,7 +11,7 @@ import pandas as pd
 
 class Geometric_Brownian_Motion:
     
-    def GBM(stock_ticker, t):
+    def GBM(stock_ticker):
         import datetime as dt
         start_date = dt.datetime(2010, 1, 1)
         end_date=dt.datetime.now()
@@ -59,6 +59,8 @@ class Geometric_Brownian_Motion:
         mu = (stock_log_returns.mean().round(5))
         # number of steps -> n
         n = 1000
+        #time (in years)
+        t=1/12
         # number of sims -> simulations
         simulations = 1000
         # initial stock price -> So
