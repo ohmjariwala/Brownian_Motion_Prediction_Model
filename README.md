@@ -15,5 +15,6 @@ The expected stock price is calculated by finding the average of the price at th
 
 # Application and Relevance:
 - Showcases the practical application of quantitative methods in forecasting financial asset movements, aiding in risk assessment and investment decision-making.
-- Highlights the use of Python libraries (YFinance, NumPy, Pandas, Matplotlib) and statistical models to simulate and visualize stock price dynamics.
+- Highlights the use of Python libraries (Matplotlib, NumPy, Pandas, Sklearn.linear_model YFinance) and statistical models to simulate and visualize stock price dynamics.
 - Conducts statistical analysis, including linear regression, to quantify the relationship between the stock and market returns. Derives the Beta (β) as a measure of the stock's volatility relative to the market.
+
