@@ -4,7 +4,6 @@
 from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime as dt
 import yfinance as yf
 from sklearn.linear_model import LinearRegression
 import pandas as pd
